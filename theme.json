@@ -17,18 +17,33 @@
       "palette": [
         {
           "slug": "lime",
-          "color": "#abff02",
-          "name": "Lime Neon"
+          "color": "#ff7a1a",
+          "name": "Rescue Orange"
+        },
+        {
+          "slug": "primary",
+          "color": "#ff7a1a",
+          "name": "Rescue Orange Primary"
+        },
+        {
+          "slug": "primary-dark",
+          "color": "#e24e12",
+          "name": "Rescue Orange Dark"
         },
         {
           "slug": "dark-green",
-          "color": "#052424",
-          "name": "Dark Green Terminal"
+          "color": "#19202d",
+          "name": "Midnight Slate"
         },
         {
           "slug": "deep-dark",
-          "color": "#021313",
-          "name": "Deep Industrial Night"
+          "color": "#141923",
+          "name": "Deep Dark Asphalt"
+        },
+        {
+          "slug": "card",
+          "color": "#242b3b",
+          "name": "Card Slate"
         },
         {
           "slug": "white",
@@ -37,23 +52,23 @@
         },
         {
           "slug": "dirty-white",
-          "color": "#f0f0f0",
-          "name": "Dirty White Surface"
+          "color": "#f3f4f6",
+          "name": "Surface Off-White"
         },
         {
           "slug": "gray",
-          "color": "#454742",
-          "name": "Terminal Slate Gray"
+          "color": "#4b5563",
+          "name": "Neutral Gray"
         },
         {
           "slug": "light-gray",
-          "color": "#c2c2c2",
-          "name": "Technical Light Gray"
+          "color": "#939ba8",
+          "name": "Muted Slate"
         },
         {
-          "slug": "orange-alert",
-          "color": "#fb6b3c",
-          "name": "Rescue Orange"
+          "slug": "success",
+          "color": "#49c889",
+          "name": "Operational Green"
         }
       ]
     },

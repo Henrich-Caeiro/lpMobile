@@ -667,9 +667,9 @@ document.addEventListener('DOMContentLoaded', () => {
               <feGaussianBlur stdDeviation="16" />
             </filter>
             <linearGradient id="truck-headlight-beam" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#abff02" stop-opacity="0.85" />
-              <stop offset="35%" stop-color="#abff02" stop-opacity="0.4" />
-              <stop offset="100%" stop-color="#abff02" stop-opacity="0" />
+              <stop offset="0%" stop-color="#ff7a1a" stop-opacity="0.9" />
+              <stop offset="35%" stop-color="#ff7a1a" stop-opacity="0.45" />
+              <stop offset="100%" stop-color="#ff7a1a" stop-opacity="0" />
             </linearGradient>
           </defs>
           <g class="paths-layer"></g>
@@ -768,18 +768,18 @@ document.addEventListener('DOMContentLoaded', () => {
             <path d="M 12 -4 L 38 -11 L 38 11 L 12 4 Z" fill="url(#truck-headlight-beam)" opacity="0.8" />
             
             <!-- Semi-Trailer Body -->
-            <rect x="-19" y="-6" width="20" height="12" rx="2" fill="#061e18" stroke="#abff02" stroke-width="0.9" stroke-opacity="0.6" />
+            <rect x="-19" y="-6" width="20" height="12" rx="2" fill="#141923" stroke="#ff7a1a" stroke-width="0.9" stroke-opacity="0.65" />
             <!-- Cargo ribs -->
-            <line x1="-14" y1="-6" x2="-14" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
-            <line x1="-9" y1="-6" x2="-9" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
-            <line x1="-4" y1="-6" x2="-4" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
+            <line x1="-14" y1="-6" x2="-14" y2="6" stroke="#ff7a1a" stroke-width="0.5" stroke-opacity="0.4" />
+            <line x1="-9" y1="-6" x2="-9" y2="6" stroke="#ff7a1a" stroke-width="0.5" stroke-opacity="0.4" />
+            <line x1="-4" y1="-6" x2="-4" y2="6" stroke="#ff7a1a" stroke-width="0.5" stroke-opacity="0.4" />
             
             <!-- Red Tail lights -->
             <rect x="-19.5" y="-5" width="1.2" height="2.5" fill="#ff3344" />
             <rect x="-19.5" y="2.5" width="1.2" height="2.5" fill="#ff3344" />
             
-            <!-- Tractor Cab (Branded Lime) -->
-            <rect x="3" y="-5.5" width="10" height="11" rx="2" fill="#abff02" />
+            <!-- Tractor Cab (Branded Rescue Orange) -->
+            <rect x="3" y="-5.5" width="10" height="11" rx="2" fill="#ff7a1a" />
             <!-- Windshield -->
             <path d="M 9 -4 L 12 -2 L 12 2 L 9 4 Z" fill="#021313" />
             <!-- GPS Telemetry Beacon / Roof Light -->
