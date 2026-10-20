@@ -655,8 +655,8 @@ document.addEventListener('DOMContentLoaded', () => {
         svg.innerHTML = `
           <defs>
             <filter id="bg-point-glow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="6" result="blur1" />
-              <feGaussianBlur stdDeviation="14" result="blur2" />
+              <feGaussianBlur stdDeviation="5" result="blur1" />
+              <feGaussianBlur stdDeviation="12" result="blur2" />
               <feMerge>
                 <feMergeNode in="blur2" />
                 <feMergeNode in="blur1" />
@@ -664,19 +664,24 @@ document.addEventListener('DOMContentLoaded', () => {
               </feMerge>
             </filter>
             <filter id="bg-point-halo" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="18" />
+              <feGaussianBlur stdDeviation="16" />
             </filter>
+            <linearGradient id="truck-headlight-beam" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#abff02" stop-opacity="0.85" />
+              <stop offset="35%" stop-color="#abff02" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#abff02" stop-opacity="0" />
+            </linearGradient>
           </defs>
           <g class="paths-layer"></g>
           <g class="trails-layer"></g>
-          <g class="points-layer"></g>
+          <g class="trucks-layer"></g>
         `;
         container.appendChild(svg);
       }
 
       const pathsLayer = svg.querySelector('.paths-layer');
       const trailsLayer = svg.querySelector('.trails-layer');
-      const pointsLayer = svg.querySelector('.points-layer');
+      const trucksLayer = svg.querySelector('.trucks-layer');
 
       let tracks = [];
       let animId = null;
@@ -737,45 +742,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pathsLayer.innerHTML = '';
         trailsLayer.innerHTML = '';
-        pointsLayer.innerHTML = '';
+        trucksLayer.innerHTML = '';
         tracks = [];
 
         pathDefs.forEach((pts, idx) => {
           const d = roundedPathString(pts);
 
-          // Base track
+          // Base highway track
           const basePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
           basePath.setAttribute('class', 'path-base');
           basePath.setAttribute('d', d);
           pathsLayer.appendChild(basePath);
 
-          // Trail path (illuminated segment)
+          // Trail path (illuminated highway lane)
           const trailPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
           trailPath.setAttribute('class', 'path-trail');
           trailPath.setAttribute('d', d);
           trailsLayer.appendChild(trailPath);
 
-          // Point of light group
-          const pointGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-          pointGroup.setAttribute('class', 'light-point');
-          pointGroup.innerHTML = `
-            <circle r="26" fill="#abff02" opacity="0.45" filter="url(#bg-point-halo)"></circle>
-            <circle r="10" fill="#abff02" opacity="0.95" filter="url(#bg-point-glow)"></circle>
-            <circle r="4" fill="#ffffff"></circle>
+          // Truck Silhouette Group (Satellite GPS View)
+          const truckGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          truckGroup.setAttribute('class', 'truck-marker');
+          truckGroup.innerHTML = `
+            <!-- Headlight beams projecting on road -->
+            <path d="M 12 -4 L 38 -11 L 38 11 L 12 4 Z" fill="url(#truck-headlight-beam)" opacity="0.8" />
+            
+            <!-- Semi-Trailer Body -->
+            <rect x="-19" y="-6" width="20" height="12" rx="2" fill="#061e18" stroke="#abff02" stroke-width="0.9" stroke-opacity="0.6" />
+            <!-- Cargo ribs -->
+            <line x1="-14" y1="-6" x2="-14" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
+            <line x1="-9" y1="-6" x2="-9" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
+            <line x1="-4" y1="-6" x2="-4" y2="6" stroke="#abff02" stroke-width="0.5" stroke-opacity="0.35" />
+            
+            <!-- Red Tail lights -->
+            <rect x="-19.5" y="-5" width="1.2" height="2.5" fill="#ff3344" />
+            <rect x="-19.5" y="2.5" width="1.2" height="2.5" fill="#ff3344" />
+            
+            <!-- Tractor Cab (Branded Lime) -->
+            <rect x="3" y="-5.5" width="10" height="11" rx="2" fill="#abff02" />
+            <!-- Windshield -->
+            <path d="M 9 -4 L 12 -2 L 12 2 L 9 4 Z" fill="#021313" />
+            <!-- GPS Telemetry Beacon / Roof Light -->
+            <circle cx="6.5" cy="0" r="2.2" fill="#ffffff" filter="url(#bg-point-glow)" />
           `;
-          pointsLayer.appendChild(pointGroup);
+          trucksLayer.appendChild(truckGroup);
 
           const totalLen = basePath.getTotalLength() || 1000;
           const trailLen = Math.min(140, totalLen * 0.32);
           trailPath.style.strokeDasharray = `${trailLen} ${totalLen * 2}`;
 
-          const durations = [4.2, 4.8, 3.8, 4.5, 5.2, 4.6];
-          const delays = [0, 1.4, 2.7, 0.8, 3.2, 2.0];
+          const durations = [5.2, 5.8, 4.6, 5.4, 6.2, 5.0];
+          const delays = [0, 1.6, 3.2, 0.9, 4.0, 2.4];
 
           tracks.push({
             basePath,
             trailPath,
-            pointGroup,
+            truckGroup,
             totalLen,
             trailLen,
             duration: durations[idx % durations.length] * 1000,
@@ -792,6 +814,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const dist = t * tr.totalLen;
           const pt = tr.basePath.getPointAtLength(dist);
 
+          // Calculate rotation angle along road curve
+          let angle = 0;
+          if (dist + 2 <= tr.totalLen) {
+            const ptNext = tr.basePath.getPointAtLength(dist + 2);
+            angle = Math.atan2(ptNext.y - pt.y, ptNext.x - pt.x) * (180 / Math.PI);
+          } else {
+            const ptPrev = tr.basePath.getPointAtLength(Math.max(0, dist - 2));
+            angle = Math.atan2(pt.y - ptPrev.y, pt.x - ptPrev.x) * (180 / Math.PI);
+          }
+
           let opacity = 1;
           if (t < 0.08) {
             opacity = t / 0.08;
@@ -799,12 +831,11 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity = Math.max(0, (1 - t) / 0.10);
           }
 
-          tr.pointGroup.setAttribute('transform', `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)})`);
-          tr.pointGroup.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
-          tr.pointGroup.style.opacity = opacity.toFixed(3);
+          tr.truckGroup.setAttribute('transform', `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)}) rotate(${angle.toFixed(1)})`);
+          tr.truckGroup.style.opacity = opacity.toFixed(3);
 
           tr.trailPath.style.strokeDashoffset = `${-(dist - tr.trailLen).toFixed(1)}`;
-          tr.trailPath.style.opacity = (opacity * 0.95).toFixed(3);
+          tr.trailPath.style.opacity = (opacity * 0.92).toFixed(3);
         });
 
         animId = requestAnimationFrame(render);

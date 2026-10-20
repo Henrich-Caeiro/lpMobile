@@ -1411,8 +1411,9 @@ body {
 
 .path-base {
   stroke: #ffffff;
-  stroke-opacity: 0.15;
+  stroke-opacity: 0.16;
   stroke-width: 1px;
+  stroke-dasharray: 6 5;
   fill: none;
   vector-effect: non-scaling-stroke;
 }
@@ -1426,8 +1427,9 @@ body {
   filter: drop-shadow(0 0 5px rgba(171, 255, 2, 0.75));
 }
 
-.light-point {
+.truck-marker {
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .footer-bg-grid {
