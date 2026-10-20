@@ -1,0 +1,36 @@
+/*
+Theme Name: Acione Mobile
+Theme URI: https://acionemobile.com.br
+Author: Acione Mobile Team
+Author URI: https://acionemobile.com.br
+Description: Tema WordPress Blocks de altissima fidelidade e estetica industrial tech, inspirado no design de ponta da Terminal Industries, desenvolvido especialmente para o aplicativo Acione Mobile — conectando frotistas, transportadoras e caminhoes necessitados a prestadores de socorro rodoviario 24h (mecanico, borracharia, auto-eletrico, guincho).
+Version: 1.0.0
+Requires at least: 6.2
+Tested up to: 6.7
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: acionemobile
+Tags: full-site-editing, block-patterns, custom-colors, custom-typography, logistics, transport, dynamic
+*/
+
+/* WordPress Core Layout resets */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--c-white, #ffffff);
+  color: var(--c-dark-green, #052424);
+  font-family: var(--font-primary, "SuisseIntl", -apple-system, BlinkMacSystemFont, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Base Link styling */
+a {
+  color: inherit;
+  text-decoration: none;
+}
