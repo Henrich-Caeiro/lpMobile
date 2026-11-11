@@ -219,20 +219,64 @@ document.addEventListener('DOMContentLoaded', () => {
   demoForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     const submitBtn = demoForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.textContent : '';
+
+    const leadType = document.getElementById('lead-type')?.value || '';
+    const leadName = document.getElementById('lead-name')?.value || '';
+    const leadPhone = document.getElementById('lead-phone')?.value || '';
+    const leadRoad = document.getElementById('lead-road')?.value || '';
+
+    if (!leadName.trim() || !leadPhone.trim()) {
+      alert('Por favor, preencha os campos obrigatórios.');
+      return;
+    }
+
     if (submitBtn) {
       submitBtn.textContent = 'Processando Chamado...';
       submitBtn.disabled = true;
-      setTimeout(() => {
-        demoForm.innerHTML = `
-          <div style="text-align: center; padding: 2rem 1rem;">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">✅</div>
-            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">Solicitação Recebida!</h3>
-            <p style="color: rgba(255,255,255,0.8); line-height: 1.5;">Nossa central 24h já recebeu seus dados e nossa equipe técnica entrará em contato em menos de 5 minutos.</p>
-            <button type="button" class="btn-header btn-lime" style="margin-top: 1.5rem;" onclick="document.querySelector('.modal-backdrop').classList.remove('open'); document.body.style.overflow='';">Fechar</button>
-          </div>
-        `;
-      }, 1000);
     }
+
+    const formData = new FormData();
+    formData.append('action', 'acione_save_lead');
+    formData.append('nonce', window.acioneCrmFrontend?.nonce || '');
+    formData.append('tipo_usuario', leadType);
+    formData.append('nome_empresa', leadName);
+    formData.append('telefone_whatsapp', leadPhone);
+    formData.append('localizacao_rodovia', leadRoad);
+
+    const ajaxUrl = window.acioneCrmFrontend?.ajax_url || '/wp-admin/admin-ajax.php';
+
+    fetch(ajaxUrl, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success) {
+          demoForm.innerHTML = `
+            <div style="text-align: center; padding: 2rem 1rem;">
+              <div style="font-size: 2.5rem; margin-bottom: 1rem;">✅</div>
+              <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">Solicitação Recebida!</h3>
+              <p style="color: rgba(255,255,255,0.8); line-height: 1.5;">Nossa central 24h já recebeu seus dados e nossa equipe técnica entrará em contato em menos de 5 minutos.</p>
+              <button type="button" class="btn-header btn-lime" style="margin-top: 1.5rem;" onclick="document.querySelector('.modal-backdrop').classList.remove('open'); document.body.style.overflow='';">Fechar</button>
+            </div>
+          `;
+        } else {
+          alert((data && data.data && data.data.message) ? data.data.message : 'Erro ao processar solicitação. Tente novamente.');
+          if (submitBtn) {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+          }
+        }
+      })
+      .catch((err) => {
+        console.error('CRM Lead submission error:', err);
+        alert('Erro de conexão ao enviar solicitação.');
+        if (submitBtn) {
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        }
+      });
   });
 });
 
