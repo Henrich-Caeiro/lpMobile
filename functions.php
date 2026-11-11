@@ -111,3 +111,9 @@ function acionemobile_register_pattern_category() {
     );
 }
 add_action( 'init', 'acionemobile_register_pattern_category' );
+
+/**
+ * CRM Nativo Acione Mobile
+ */
+require_once get_template_directory() . '/inc/crm.php';
+
